@@ -4,102 +4,421 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
 <meta name="theme-color" content="#ff7a00">
-<title>Minimarket Simulator</title>
+<title>Minimarket Simulator V2</title>
 
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  -webkit-tap-highlight-color:transparent;
+}
+
 body{
   font-family:Arial,sans-serif;
-  background:linear-gradient(135deg,#ff8a00,#ffb300);
-  min-height:100vh;color:#222;
-  padding-bottom:30px;
+  background:#101827;
+  color:#fff;
+  min-height:100vh;
+  overflow-x:hidden;
 }
-.app{max-width:600px;margin:auto;padding:12px}
-.header{
-  background:#fff;border-radius:20px;padding:18px;
-  box-shadow:0 8px 25px #0002;margin-bottom:12px
-}
-.logo{font-size:28px;font-weight:900}
-.logo span{color:#ff7a00}
-.sub{color:#777;margin-top:4px}
-.stats{
-  display:grid;grid-template-columns:repeat(3,1fr);
-  gap:8px;margin-top:15px
-}
-.stat{
-  background:#f7f7f7;border-radius:14px;padding:12px;
-  text-align:center
-}
-.stat b{display:block;font-size:18px;margin-top:4px}
-.card{
-  background:#fff;border-radius:20px;padding:16px;
-  margin-bottom:12px;box-shadow:0 8px 25px #0002
-}
-.card h2{font-size:19px;margin-bottom:12px}
-.progress{
-  height:13px;background:#eee;border-radius:20px;overflow:hidden
-}
-.progress div{
-  height:100%;width:0;background:linear-gradient(90deg,#ff6a00,#ffc107);
-  transition:.4s
-}
-.grid{
-  display:grid;grid-template-columns:1fr 1fr;gap:10px
-}
+
 button{
-  border:0;border-radius:15px;padding:15px 10px;
-  font-size:15px;font-weight:700;cursor:pointer;
-  background:#ff7a00;color:white;
-  box-shadow:0 5px 12px #0002;
-  transition:.15s
+  border:0;
+  cursor:pointer;
+  font-weight:800;
+  touch-action:manipulation;
 }
-button:active{transform:scale(.96)}
-button.secondary{background:#eee;color:#333}
-button.green{background:#16a34a}
-button.red{background:#dc2626}
-button.blue{background:#2563eb}
-button:disabled{opacity:.45;cursor:not-allowed}
-.product{
-  display:flex;justify-content:space-between;align-items:center;
-  padding:12px;background:#f7f7f7;border-radius:14px;margin-bottom:8px
+
+.app{
+  width:100%;
+  max-width:600px;
+  margin:auto;
+  min-height:100vh;
+  background:#182235;
+  padding-bottom:25px;
 }
-.product small{display:block;color:#777;margin-top:3px}
-.product button{padding:9px 12px;border-radius:11px}
+
+/* HEADER */
+.header{
+  background:linear-gradient(135deg,#ff6a00,#ffb300);
+  padding:16px;
+  border-radius:0 0 25px 25px;
+  box-shadow:0 5px 20px #0006;
+}
+
+.top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.title{
+  font-size:22px;
+  font-weight:900;
+}
+
+.subtitle{
+  font-size:12px;
+  opacity:.85;
+  margin-top:3px;
+}
+
+.money{
+  background:#0003;
+  padding:9px 12px;
+  border-radius:13px;
+  font-weight:900;
+}
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:7px;
+  margin-top:14px;
+}
+
+.stat{
+  background:#fff2;
+  border:1px solid #fff3;
+  padding:8px 3px;
+  border-radius:12px;
+  text-align:center;
+  font-size:11px;
+}
+
+.stat b{
+  display:block;
+  font-size:15px;
+  margin-top:3px;
+}
+
+/* STORE */
+.store{
+  margin:12px;
+  background:#26344d;
+  border:3px solid #394b68;
+  border-radius:20px;
+  overflow:hidden;
+  position:relative;
+}
+
+.store-title{
+  background:#111a2a;
+  padding:10px;
+  text-align:center;
+  font-weight:900;
+}
+
+.store-area{
+  height:360px;
+  position:relative;
+  background:
+    linear-gradient(#d8d8d8 1px,transparent 1px),
+    linear-gradient(90deg,#d8d8d8 1px,transparent 1px);
+  background-size:40px 40px;
+  background-color:#eeeeee;
+  overflow:hidden;
+}
+
+/* RAK */
+.rack{
+  position:absolute;
+  width:90px;
+  height:105px;
+  background:#7b4b25;
+  border:5px solid #513018;
+  border-radius:8px;
+  color:white;
+  text-align:center;
+  padding-top:6px;
+  box-shadow:0 5px 7px #0004;
+}
+
+.rack:before{
+  content:"📦 📦";
+  display:block;
+  font-size:18px;
+  margin-bottom:7px;
+}
+
+.rack:after{
+  content:"📦 📦";
+  display:block;
+  font-size:18px;
+  margin-top:5px;
+}
+
+.rack1{left:12px;top:25px}
+.rack2{left:125px;top:25px}
+.rack3{right:12px;top:25px}
+
+.rack-name{
+  font-size:10px;
+  background:#0008;
+  padding:3px;
+  position:absolute;
+  bottom:3px;
+  left:3px;
+  right:3px;
+}
+
+/* KASIR */
+.counter{
+  position:absolute;
+  bottom:25px;
+  left:50%;
+  transform:translateX(-50%);
+  width:190px;
+  height:65px;
+  background:#9a5a2e;
+  border:5px solid #60361d;
+  border-radius:12px;
+  text-align:center;
+  padding-top:12px;
+  color:#fff;
+  font-weight:900;
+}
+
+.counter small{
+  display:block;
+  font-size:10px;
+  margin-top:4px;
+}
+
+/* PLAYER */
+.player{
+  position:absolute;
+  left:50%;
+  bottom:95px;
+  transform:translateX(-50%);
+  font-size:45px;
+  transition:.15s;
+  z-index:10;
+  filter:drop-shadow(0 4px 2px #0005);
+}
+
+.player-label{
+  position:absolute;
+  top:-18px;
+  left:50%;
+  transform:translateX(-50%);
+  background:#111c;
+  padding:2px 6px;
+  border-radius:6px;
+  font-size:9px;
+  white-space:nowrap;
+}
+
+/* CUSTOMERS */
+.customer{
+  position:absolute;
+  font-size:37px;
+  z-index:5;
+  transition:.8s;
+}
+
+.customer-label{
+  position:absolute;
+  top:-14px;
+  left:50%;
+  transform:translateX(-50%);
+  background:#111c;
+  color:white;
+  font-size:8px;
+  padding:2px 5px;
+  border-radius:5px;
+  white-space:nowrap;
+}
+
+/* CONTROLS */
+.controls{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+  padding:12px;
+}
+
+.ctrl{
+  background:#34445f;
+  color:white;
+  border-radius:15px;
+  padding:13px 5px;
+  font-size:21px;
+  box-shadow:0 4px 10px #0003;
+}
+
+.ctrl:active{
+  transform:scale(.93);
+  background:#455a78;
+}
+
+/* ACTION */
+.actions{
+  padding:0 12px 12px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+}
+
+.action{
+  min-height:55px;
+  border-radius:15px;
+  color:white;
+  background:#ff7200;
+  font-size:14px;
+  box-shadow:0 4px 10px #0003;
+}
+
+.green{background:#16a34a}
+.blue{background:#2563eb}
+.red{background:#dc2626}
+.gray{background:#46546c}
+
+/* CARDS */
+.card{
+  background:#202d43;
+  margin:12px;
+  padding:15px;
+  border-radius:18px;
+  box-shadow:0 5px 15px #0003;
+}
+
+.card h2{
+  font-size:17px;
+  margin-bottom:12px;
+}
+
+.progress{
+  height:12px;
+  background:#111827;
+  border-radius:20px;
+  overflow:hidden;
+}
+
+.progress-bar{
+  height:100%;
+  width:0;
+  background:linear-gradient(90deg,#ff7200,#ffd000);
+  transition:.4s;
+}
+
+.info{
+  display:flex;
+  justify-content:space-between;
+  margin-top:7px;
+  font-size:12px;
+  color:#aebbd0;
+}
+
+/* MISSIONS */
 .mission{
-  display:flex;justify-content:space-between;gap:10px;
-  padding:12px;background:#fff7ed;border-radius:13px;margin-bottom:8px
+  background:#293850;
+  padding:10px;
+  border-radius:12px;
+  display:flex;
+  justify-content:space-between;
+  margin-bottom:7px;
+  font-size:13px;
 }
-.done{background:#dcfce7}
-.badge{
-  display:inline-block;background:#ff7a00;color:white;
-  padding:5px 10px;border-radius:20px;font-size:12px
+
+.mission.done{
+  background:#14532d;
 }
+
+.reward{
+  color:#ffd166;
+}
+
+/* LOG */
 .log{
-  max-height:180px;overflow:auto;
-  font-size:14px
+  max-height:170px;
+  overflow:auto;
 }
-.log div{
-  padding:9px;border-bottom:1px solid #eee
+
+.log-item{
+  padding:8px 2px;
+  border-bottom:1px solid #ffffff12;
+  font-size:12px;
+  color:#cbd5e1;
 }
-.shop{
-  text-align:center;background:linear-gradient(135deg,#fff,#fff7ed);
-  border-radius:18px;padding:20px;margin-bottom:12px
+
+/* POPUP */
+.overlay{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:#0009;
+  z-index:100;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
 }
-.shop-icon{font-size:65px}
-.shop-name{font-size:25px;font-weight:900;margin:8px}
+
+.modal{
+  width:100%;
+  max-width:430px;
+  background:#202d43;
+  border-radius:22px;
+  padding:20px;
+  box-shadow:0 15px 50px #0008;
+}
+
+.modal h2{
+  margin-bottom:15px;
+}
+
+.modal button{
+  width:100%;
+  margin-top:8px;
+  padding:14px;
+  border-radius:13px;
+  color:white;
+  background:#ff7200;
+}
+
+.product-row{
+  display:flex;
+  justify-content:space-between;
+  padding:10px;
+  background:#293850;
+  margin-bottom:7px;
+  border-radius:10px;
+  font-size:13px;
+}
+
 .toast{
-  position:fixed;left:50%;bottom:20px;
+  position:fixed;
+  z-index:200;
+  bottom:20px;
+  left:50%;
   transform:translate(-50%,120px);
-  background:#222;color:#fff;padding:13px 20px;
-  border-radius:30px;z-index:99;
-  transition:.3s;box-shadow:0 8px 25px #0004;
-  text-align:center;max-width:90%
+  background:#fff;
+  color:#111;
+  padding:12px 18px;
+  border-radius:30px;
+  font-weight:800;
+  box-shadow:0 8px 25px #0007;
+  transition:.3s;
+  text-align:center;
+  max-width:90%;
 }
-.toast.show{transform:translate(-50%,0)}
-footer{text-align:center;color:#fff8;font-size:12px;padding:8px}
+
+.toast.show{
+  transform:translate(-50%,0);
+}
+
+.footer{
+  text-align:center;
+  color:#718096;
+  font-size:11px;
+  padding:10px;
+}
+
 @media(max-width:380px){
-  .stats{grid-template-columns:1fr 1fr}
-  button{font-size:14px}
+  .store-area{height:330px}
+  .rack{width:75px;height:95px}
+  .rack2{left:105px}
+  .player{font-size:40px}
 }
 </style>
 </head>
@@ -108,93 +427,276 @@ footer{text-align:center;color:#fff8;font-size:12px;padding:8px}
 
 <div class="app">
 
-  <div class="header">
-    <div class="logo">🏪 <span>MINIMARKET</span> SIMULATOR</div>
-    <div class="sub">Kelola toko kecilmu dan jadilah juragan!</div>
+<!-- HEADER -->
+<div class="header">
 
-    <div class="stats">
-      <div class="stat">💰 Uang<b id="money">Rp 0</b></div>
-      <div class="stat">⭐ Level<b id="level">1</b></div>
-      <div class="stat">📦 Stok<b id="stock">0</b></div>
+  <div class="top">
+    <div>
+      <div class="title">🏪 MINIMARKET SIMULATOR</div>
+      <div class="subtitle">Jadilah karyawan terbaik!</div>
+    </div>
+
+    <div class="money" id="money">
+      Rp 50.000
     </div>
   </div>
 
-  <div class="shop">
-    <div class="shop-icon" id="shopIcon">🏪</div>
-    <div class="shop-name" id="shopName">Warung Kecil</div>
-    <span class="badge" id="upgradeText">Upgrade: Rp 50.000</span>
-  </div>
+  <div class="stats">
 
-  <div class="card">
-    <h2>⭐ Pengalaman</h2>
-    <div class="progress"><div id="xpBar"></div></div>
-    <p style="margin-top:7px;color:#777">
-      XP: <b id="xp">0</b> / <b id="xpNeed">100</b>
-    </p>
-  </div>
-
-  <div class="card">
-    <h2>🎮 Aktivitas Toko</h2>
-
-    <div class="grid">
-      <button onclick="serveCustomer()">🛒 Layani Pelanggan</button>
-      <button class="green" onclick="restock()">📦 Restock Barang</button>
-      <button class="blue" onclick="upgradeShop()">🏪 Upgrade Toko</button>
-      <button class="secondary" onclick="showProducts()">📋 Lihat Produk</button>
-    </div>
-  </div>
-
-  <div class="card">
-    <h2>🎯 Misi Hari Ini</h2>
-
-    <div class="mission" id="m1">
-      <span>Layani 10 pelanggan</span>
-      <b id="missionCustomer">0/10</b>
+    <div class="stat">
+      ⭐ LEVEL
+      <b id="level">1</b>
     </div>
 
-    <div class="mission" id="m2">
-      <span>Restock 5 kali</span>
-      <b id="missionRestock">0/5</b>
+    <div class="stat">
+      ❤️ ENERGI
+      <b id="energy">100</b>
     </div>
 
-    <div class="mission" id="m3">
-      <span>Dapatkan Rp100.000</span>
-      <b id="missionMoney">Rp 0</b>
+    <div class="stat">
+      👥 PELANGGAN
+      <b id="customers">0</b>
     </div>
-  </div>
 
-  <div class="card" id="productsCard" style="display:none">
-    <h2>📦 Produk Toko</h2>
-    <div id="products"></div>
-  </div>
-
-  <div class="card">
-    <h2>📜 Aktivitas Terakhir</h2>
-    <div class="log" id="log"></div>
-  </div>
-
-  <div class="card">
-    <h2>⚙️ Data Game</h2>
-    <div class="grid">
-      <button class="secondary" onclick="backupGame()">💾 Backup</button>
-      <button class="secondary" onclick="document.getElementById('restore').click()">♻️ Restore</button>
-      <button class="red" onclick="resetGame()">🗑️ Reset Game</button>
+    <div class="stat">
+      📦 STOK
+      <b id="stock">30</b>
     </div>
-    <input id="restore" type="file" accept=".json" style="display:none" onchange="restoreGame(event)">
-  </div>
 
-  <footer>
-    Minimarket Simulator • Offline Game
-  </footer>
+  </div>
 
 </div>
 
+
+<!-- STORE -->
+<div class="store">
+
+  <div class="store-title">
+    🏪 TOKO KAMU
+  </div>
+
+  <div class="store-area" id="storeArea">
+
+    <div class="rack rack1">
+      <div class="rack-name">MAKANAN</div>
+    </div>
+
+    <div class="rack rack2">
+      <div class="rack-name">MINUMAN</div>
+    </div>
+
+    <div class="rack rack3">
+      <div class="rack-name">KEBUTUHAN</div>
+    </div>
+
+    <div class="counter">
+      🧾 KASIR
+      <small>Layani pelanggan di sini</small>
+    </div>
+
+    <div class="player" id="player">
+      🧑‍💼
+      <div class="player-label">KAMU</div>
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- MOVEMENT -->
+<div class="controls">
+
+  <button class="ctrl" onclick="movePlayer('up')">⬆️</button>
+
+  <button class="ctrl" onclick="movePlayer('interact')">
+    🤝
+  </button>
+
+  <button class="ctrl" onclick="movePlayer('up')">⬆️</button>
+
+  <button class="ctrl" onclick="movePlayer('left')">⬅️</button>
+
+  <button class="ctrl" onclick="movePlayer('down')">⬇️</button>
+
+  <button class="ctrl" onclick="movePlayer('right')">➡️</button>
+
+</div>
+
+
+<!-- ACTION -->
+<div class="actions">
+
+  <button class="action" onclick="serveCustomer()">
+    🧾 LAYANI PELANGGAN
+  </button>
+
+  <button class="action green" onclick="restock()">
+    📦 RESTOCK
+  </button>
+
+  <button class="action blue" onclick="startShift()">
+    ⏰ MULAI SHIFT
+  </button>
+
+  <button class="action" onclick="upgradeShop()">
+    🏪 UPGRADE TOKO
+  </button>
+
+</div>
+
+
+<!-- XP -->
+<div class="card">
+
+  <h2>⭐ Pengalaman Kerja</h2>
+
+  <div class="progress">
+    <div class="progress-bar" id="xpBar"></div>
+  </div>
+
+  <div class="info">
+    <span>XP</span>
+    <span>
+      <b id="xp">0</b> /
+      <b id="xpNeed">100</b>
+    </span>
+  </div>
+
+</div>
+
+
+<!-- SHIFT -->
+<div class="card">
+
+  <h2>⏰ Shift Kerja</h2>
+
+  <div class="info">
+    <span>Jam kerja</span>
+    <b id="workTime">08:00</b>
+  </div>
+
+  <div class="progress" style="margin-top:10px">
+    <div class="progress-bar" id="shiftBar"></div>
+  </div>
+
+  <div class="info">
+    <span>Status</span>
+    <b id="shiftStatus">Belum mulai</b>
+  </div>
+
+</div>
+
+
+<!-- MISSIONS -->
+<div class="card">
+
+  <h2>🎯 Misi Hari Ini</h2>
+
+  <div class="mission" id="mission1">
+    <span>Layani 10 pelanggan</span>
+    <b id="missionCustomers">0/10</b>
+  </div>
+
+  <div class="mission" id="mission2">
+    <span>Restock 5 kali</span>
+    <b id="missionRestock">0/5</b>
+  </div>
+
+  <div class="mission" id="mission3">
+    <span>Hasilkan Rp100.000</span>
+    <b id="missionEarn">Rp 0</b>
+  </div>
+
+</div>
+
+
+<!-- LOG -->
+<div class="card">
+
+  <h2>📜 Aktivitas</h2>
+
+  <div class="log" id="log">
+    <div class="log-item">
+      🎮 Selamat datang di minimarket!
+    </div>
+  </div>
+
+</div>
+
+
+<!-- DATA -->
+<div class="card">
+
+  <h2>💾 Data Game</h2>
+
+  <div class="actions" style="padding:0">
+
+    <button class="action gray" onclick="backupGame()">
+      💾 BACKUP
+    </button>
+
+    <button class="action gray" onclick="document.getElementById('restoreFile').click()">
+      ♻️ RESTORE
+    </button>
+
+    <button class="action red" onclick="resetGame()">
+      🗑️ RESET
+    </button>
+
+  </div>
+
+  <input
+    id="restoreFile"
+    type="file"
+    accept=".json"
+    style="display:none"
+    onchange="restoreGame(event)"
+  >
+
+</div>
+
+
+<div class="footer">
+  Minimarket Simulator V2 • Offline
+</div>
+
+</div>
+
+
+<!-- MODAL PRODUK -->
+<div class="overlay" id="productModal">
+
+  <div class="modal">
+
+    <h2>🛒 Belanja Pelanggan</h2>
+
+    <div id="customerOrder"></div>
+
+    <button onclick="completeSale()">
+      💰 SELESAIKAN TRANSAKSI
+    </button>
+
+    <button
+      onclick="closeModal()"
+      style="background:#475569"
+    >
+      TUTUP
+    </button>
+
+  </div>
+
+</div>
+
+
 <div class="toast" id="toast"></div>
 
-<script>
-const KEY="minimarket_simulator_v1";
 
-const products=[
+<script>
+
+const SAVE_KEY="MINIMARKET_SIMULATOR_V2";
+
+const productList=[
   {name:"Indomie",price:3000,emoji:"🍜"},
   {name:"Aqua",price:4000,emoji:"💧"},
   {name:"Teh Botol",price:5000,emoji:"🧃"},
@@ -205,377 +707,1337 @@ const products=[
   {name:"Sabun",price:5000,emoji:"🧼"}
 ];
 
+
 let game={
+
   money:50000,
+
   level:1,
+
   xp:0,
-  stock:20,
+
+  energy:100,
+
+  stock:30,
+
   customers:0,
+
   restocks:0,
+
   earned:0,
+
   shopLevel:1,
+
+  workMinutes:0,
+
+  shiftActive:false,
+
+  playerX:50,
+
+  playerY:65,
+
   logs:[]
+
 };
 
-function save(){
-  localStorage.setItem(KEY,JSON.stringify(game));
-}
 
-function load(){
-  const data=localStorage.getItem(KEY);
-  if(data){
-    try{
-      game=Object.assign(game,JSON.parse(data));
-    }catch(e){}
-  }
-}
+let currentOrder=[];
 
-function rupiah(n){
-  return "Rp "+Number(n).toLocaleString("id-ID");
-}
 
-function toast(text){
-  const el=document.getElementById("toast");
-  el.textContent=text;
-  el.classList.add("show");
-  clearTimeout(window.toastTimer);
-  window.toastTimer=setTimeout(()=>{
-    el.classList.remove("show");
-  },2200);
-}
+/* LOAD */
 
-function addLog(text){
-  game.logs.unshift({
-    text:text,
-    time:new Date().toLocaleTimeString("id-ID",{
-      hour:"2-digit",
-      minute:"2-digit"
-    })
-  });
+function loadGame(){
 
-  if(game.logs.length>30) game.logs.length=30;
-}
+  const saved=localStorage.getItem(SAVE_KEY);
 
-function xpNeed(){
-  return 100+(game.level-1)*50;
-}
-
-function addXP(amount){
-  game.xp+=amount;
-
-  while(game.xp>=xpNeed()){
-    game.xp-=xpNeed();
-    game.level++;
-
-    const bonus=game.level*500;
-    game.money+=bonus;
-
-    addLog("🎉 Naik ke level "+game.level+"! Bonus "+rupiah(bonus));
-    toast("🎉 LEVEL UP! Kamu sekarang level "+game.level);
-  }
-}
-
-function serveCustomer(){
-
-  if(game.stock<=0){
-    toast("📦 Stok habis! Restock dulu.");
-    return;
-  }
-
-  const quantity=Math.floor(Math.random()*3)+1;
-
-  if(game.stock<quantity){
-    toast("📦 Stok tidak cukup!");
-    return;
-  }
-
-  let earned=0;
-
-  for(let i=0;i<quantity;i++){
-    const p=products[Math.floor(Math.random()*products.length)];
-    earned+=p.price;
-  }
-
-  earned+=game.shopLevel*500;
-
-  game.stock-=quantity;
-  game.money+=earned;
-  game.earned+=earned;
-  game.customers++;
-
-  addXP(10+game.shopLevel*2);
-
-  addLog("🛒 Pelanggan dilayani: +"+rupiah(earned));
-
-  if(game.customers>=10 && !localStorage.getItem("mission_customer_reward")){
-    game.money+=10000;
-    localStorage.setItem("mission_customer_reward","1");
-    addLog("🎯 Misi pelanggan selesai: bonus "+rupiah(10000));
-    toast("🎯 Misi selesai! Bonus Rp10.000");
-  }else{
-    toast("💰 Penjualan +"+rupiah(earned));
-  }
-
-  save();
-  render();
-}
-
-function restock(){
-
-  const cost=15000;
-
-  if(game.money<cost){
-    toast("💸 Uang tidak cukup. Butuh "+rupiah(cost));
-    return;
-  }
-
-  game.money-=cost;
-
-  const amount=15+game.shopLevel*5;
-  game.stock+=amount;
-  game.restocks++;
-
-  addXP(15);
-
-  addLog("📦 Restock +"+amount+" barang (-"+rupiah(cost)+")");
-
-  if(game.restocks>=5 && !localStorage.getItem("mission_restock_reward")){
-    game.money+=15000;
-    localStorage.setItem("mission_restock_reward","1");
-    addLog("🎯 Misi restock selesai: bonus Rp15.000");
-    toast("🎯 Misi selesai! Bonus Rp15.000");
-  }else{
-    toast("📦 Stok bertambah "+amount);
-  }
-
-  save();
-  render();
-}
-
-function upgradeCost(){
-  return game.shopLevel*50000;
-}
-
-function upgradeShop(){
-
-  const cost=upgradeCost();
-
-  if(game.money<cost){
-    toast("💸 Butuh "+rupiah(cost)+" untuk upgrade.");
-    return;
-  }
-
-  game.money-=cost;
-  game.shopLevel++;
-
-  addXP(50);
-
-  addLog("🏪 Toko di-upgrade ke level "+game.shopLevel);
-
-  toast("🏪 Upgrade berhasil!");
-
-  save();
-  render();
-}
-
-function showProducts(){
-  const card=document.getElementById("productsCard");
-
-  if(card.style.display==="none"){
-    card.style.display="block";
-    renderProducts();
-    card.scrollIntoView({behavior:"smooth"});
-  }else{
-    card.style.display="none";
-  }
-}
-
-function renderProducts(){
-
-  const el=document.getElementById("products");
-
-  el.innerHTML=products.map(p=>`
-    <div class="product">
-      <div>
-        <b>${p.emoji} ${p.name}</b>
-        <small>${rupiah(p.price)} / item</small>
-      </div>
-      <span>📦</span>
-    </div>
-  `).join("");
-}
-
-function render(){
-
-  document.getElementById("money").textContent=rupiah(game.money);
-  document.getElementById("level").textContent=game.level;
-  document.getElementById("stock").textContent=game.stock;
-
-  document.getElementById("xp").textContent=game.xp;
-  document.getElementById("xpNeed").textContent=xpNeed();
-
-  const percent=Math.min(100,(game.xp/xpNeed())*100);
-  document.getElementById("xpBar").style.width=percent+"%";
-
-  document.getElementById("missionCustomer").textContent=
-    Math.min(game.customers,10)+"/10";
-
-  document.getElementById("missionRestock").textContent=
-    Math.min(game.restocks,5)+"/5";
-
-  document.getElementById("missionMoney").textContent=
-    rupiah(Math.min(game.earned,100000));
-
-  if(game.customers>=10){
-    document.getElementById("m1").classList.add("done");
-  }
-
-  if(game.restocks>=5){
-    document.getElementById("m2").classList.add("done");
-  }
-
-  if(game.earned>=100000){
-    document.getElementById("m3").classList.add("done");
-  }
-
-  const names=[
-    "Warung Kecil",
-    "Warung Modern",
-    "Toko Kelontong",
-    "Minimarket",
-    "Supermarket Mini",
-    "Supermarket",
-    "Hypermarket"
-  ];
-
-  const icons=[
-    "🏚️",
-    "🏠",
-    "🏪",
-    "🏬",
-    "🏢",
-    "🏙️",
-    "🏙️"
-  ];
-
-  const index=Math.min(game.shopLevel-1,names.length-1);
-
-  document.getElementById("shopName").textContent=
-    names[index];
-
-  document.getElementById("shopIcon").textContent=
-    icons[index];
-
-  document.getElementById("upgradeText").textContent=
-    "Upgrade: "+rupiah(upgradeCost());
-
-  const log=document.getElementById("log");
-
-  if(game.logs.length===0){
-    log.innerHTML="<div>Belum ada aktivitas.</div>";
-  }else{
-    log.innerHTML=game.logs.map(x=>`
-      <div>
-        <b>${x.time}</b> — ${x.text}
-      </div>
-    `).join("");
-  }
-
-  renderProducts();
-}
-
-function backupGame(){
-
-  const data={
-    ...game,
-    backupDate:new Date().toISOString()
-  };
-
-  const blob=new Blob(
-    [JSON.stringify(data,null,2)],
-    {type:"application/json"}
-  );
-
-  const url=URL.createObjectURL(blob);
-
-  const a=document.createElement("a");
-  a.href=url;
-  a.download="backup-minimarket.json";
-  a.click();
-
-  URL.revokeObjectURL(url);
-
-  toast("💾 Backup berhasil dibuat!");
-}
-
-function restoreGame(event){
-
-  const file=event.target.files[0];
-
-  if(!file)return;
-
-  const reader=new FileReader();
-
-  reader.onload=function(e){
+  if(saved){
 
     try{
 
-      const data=JSON.parse(e.target.result);
+      game=Object.assign(
+        game,
+        JSON.parse(saved)
+      );
 
-      if(typeof data.money!=="number"){
-        throw new Error();
-      }
+    }catch(e){
 
-      game=Object.assign(game,data);
-
-      save();
-      render();
-
-      toast("♻️ Data berhasil dipulihkan!");
-
-    }catch(err){
-
-      toast("❌ File backup tidak valid.");
+      console.log("Save rusak");
 
     }
 
+  }
+
+}
+
+
+/* SAVE */
+
+function saveGame(){
+
+  localStorage.setItem(
+    SAVE_KEY,
+    JSON.stringify(game)
+  );
+
+}
+
+
+/* RUPIAH */
+
+function rupiah(n){
+
+  return "Rp "+
+    Number(n).toLocaleString("id-ID");
+
+}
+
+
+/* TOAST */
+
+function toast(message){
+
+  const el=document.getElementById("toast");
+
+  el.textContent=message;
+
+  el.classList.add("show");
+
+  clearTimeout(window.toastTimer);
+
+  window.toastTimer=setTimeout(()=>{
+
+    el.classList.remove("show");
+
+  },2200);
+
+}
+
+
+/* LOG */
+
+function addLog(text){
+
+  game.logs.unshift({
+
+    text:text,
+
+    time:new Date().toLocaleTimeString(
+      "id-ID",
+      {
+        hour:"2-digit",
+        minute:"2-digit"
+      }
+    )
+
+  });
+
+
+  if(game.logs.length>40){
+
+    game.logs.length=40;
+
+  }
+
+}
+
+
+/* XP */
+
+function getXPNeed(){
+
+  return 100+
+    ((game.level-1)*50);
+
+}
+
+
+function addXP(amount){
+
+  game.xp+=amount;
+
+
+  while(
+    game.xp>=getXPNeed()
+  ){
+
+    game.xp-=getXPNeed();
+
+    game.level++;
+
+    const bonus=
+      game.level*1000;
+
+    game.money+=bonus;
+
+
+    addLog(
+      "🎉 LEVEL UP! Level "+
+      game.level+
+      " + bonus "+
+      rupiah(bonus)
+    );
+
+
+    toast(
+      "🎉 LEVEL UP! Kamu level "+
+      game.level
+    );
+
+  }
+
+}
+
+
+/* MOVE PLAYER */
+
+function movePlayer(direction){
+
+  const step=7;
+
+
+  if(direction==="left"){
+
+    game.playerX=
+      Math.max(
+        8,
+        game.playerX-step
+      );
+
+  }
+
+
+  if(direction==="right"){
+
+    game.playerX=
+      Math.min(
+        92,
+        game.playerX+step
+      );
+
+  }
+
+
+  if(direction==="up"){
+
+    game.playerY=
+      Math.max(
+        15,
+        game.playerY-step
+      );
+
+  }
+
+
+  if(direction==="down"){
+
+    game.playerY=
+      Math.min(
+        85,
+        game.playerY+step
+      );
+
+  }
+
+
+  if(direction==="interact"){
+
+    interact();
+
+  }
+
+
+  updatePlayer();
+
+  saveGame();
+
+}
+
+
+function updatePlayer(){
+
+  const player=
+    document.getElementById("player");
+
+
+  player.style.left=
+    game.playerX+"%";
+
+
+  player.style.bottom=
+    game.playerY+"%";
+
+}
+
+
+/* INTERACT */
+
+function interact(){
+
+  if(
+    game.playerY<45 &&
+    game.playerX<35
+  ){
+
+    toast("📦 Rak makanan");
+
+    return;
+
+  }
+
+
+  if(
+    game.playerY<45 &&
+    game.playerX>35 &&
+    game.playerX<70
+  ){
+
+    toast("💧 Rak minuman");
+
+    return;
+
+  }
+
+
+  if(
+    game.playerY<45 &&
+    game.playerX>70
+  ){
+
+    toast("🧼 Rak kebutuhan");
+
+    return;
+
+  }
+
+
+  if(
+    game.playerY>60
+  ){
+
+    serveCustomer();
+
+    return;
+
+  }
+
+
+  toast("ℹ️ Tidak ada aktivitas di sini.");
+
+}
+
+
+/* CUSTOMER */
+
+function spawnCustomer(){
+
+  const area=
+    document.getElementById("storeArea");
+
+
+  const customer=
+    document.createElement("div");
+
+
+  customer.className="customer";
+
+
+  const faces=[
+    "👨",
+    "👩",
+    "👴",
+    "👵",
+    "🧑"
+  ];
+
+
+  customer.textContent=
+    faces[
+      Math.floor(
+        Math.random()*faces.length
+      )
+    ];
+
+
+  customer.style.left=
+    "5%";
+
+
+  customer.style.top=
+    (50+
+      Math.random()*30
+    )+"%";
+
+
+  area.appendChild(customer);
+
+
+  setTimeout(()=>{
+
+    customer.style.left=
+      (25+
+        Math.random()*55
+      )+"%";
+
+
+  },500);
+
+
+  setTimeout(()=>{
+
+    customer.style.left=
+      "45%";
+
+  },1800);
+
+
+  setTimeout(()=>{
+
+    if(customer.parentNode){
+
+      customer.remove();
+
+    }
+
+  },6000);
+
+}
+
+
+/* SERVE CUSTOMER */
+
+function serveCustomer(){
+
+  if(!game.shiftActive){
+
+    toast("⏰ Mulai shift terlebih dahulu!");
+
+    return;
+
+  }
+
+
+  if(game.energy<10){
+
+    toast("😴 Energi habis! Istirahat dulu.");
+
+    return;
+
+  }
+
+
+  if(game.stock<=0){
+
+    toast("📦 Stok habis! Restock dulu.");
+
+    return;
+
+  }
+
+
+  game.energy-=10;
+
+
+  currentOrder=[];
+
+
+  const count=
+    Math.floor(
+      Math.random()*3
+    )+1;
+
+
+  for(
+    let i=0;
+    i<count;
+    i++
+  ){
+
+    const product=
+      productList[
+        Math.floor(
+          Math.random()*
+          productList.length
+        )
+      ];
+
+
+    currentOrder.push(product);
+
+  }
+
+
+  showOrder();
+
+}
+
+
+/* SHOW ORDER */
+
+function showOrder(){
+
+  const box=
+    document.getElementById(
+      "customerOrder"
+    );
+
+
+  let total=0;
+
+
+  box.innerHTML=
+    currentOrder.map(
+      p=>{
+
+        total+=p.price;
+
+
+        return `
+        <div class="product-row">
+          <span>
+            ${p.emoji}
+            ${p.name}
+          </span>
+
+          <b>
+            ${rupiah(p.price)}
+          </b>
+        </div>
+        `;
+
+      }
+    ).join("");
+
+
+  box.innerHTML+=`
+
+    <div
+      style="
+        margin-top:12px;
+        padding:12px;
+        background:#111827;
+        border-radius:12px;
+        text-align:center
+      "
+    >
+      TOTAL
+      <br>
+      <b
+        style="
+          font-size:22px;
+          color:#ffd166
+        "
+      >
+        ${rupiah(total)}
+      </b>
+    </div>
+
+  `;
+
+
+  document.getElementById(
+    "productModal"
+  ).style.display="flex";
+
+}
+
+
+/* COMPLETE SALE */
+
+function completeSale(){
+
+  if(currentOrder.length===0){
+
+    closeModal();
+
+    return;
+
+  }
+
+
+  let total=0;
+
+
+  currentOrder.forEach(
+    p=>{
+
+      total+=p.price;
+
+    }
+  );
+
+
+  const bonus=
+    game.shopLevel*500;
+
+
+  total+=bonus;
+
+
+  game.money+=total;
+
+  game.stock=
+    Math.max(
+      0,
+      game.stock-
+      currentOrder.length
+    );
+
+
+  game.customers++;
+
+  game.earned+=total;
+
+
+  addXP(
+    15+
+    game.shopLevel*2
+  );
+
+
+  addLog(
+    "🧾 Penjualan "+
+    rupiah(total)
+  );
+
+
+  closeModal();
+
+
+  spawnCustomer();
+
+
+  toast(
+    "💰 Penjualan berhasil! +"+
+    rupiah(total)
+  );
+
+
+  checkMissions();
+
+  saveGame();
+
+  render();
+
+}
+
+
+/* CLOSE MODAL */
+
+function closeModal(){
+
+  document.getElementById(
+    "productModal"
+  ).style.display="none";
+
+  currentOrder=[];
+
+}
+
+
+/* RESTOCK */
+
+function restock(){
+
+  if(!game.shiftActive){
+
+    toast("⏰ Mulai shift terlebih dahulu!");
+
+    return;
+
+  }
+
+
+  const cost=15000;
+
+
+  if(game.money<cost){
+
+    toast(
+      "💸 Uang tidak cukup! Butuh "+
+      rupiah(cost)
+    );
+
+    return;
+
+  }
+
+
+  game.money-=cost;
+
+
+  const amount=
+    15+
+    game.shopLevel*5;
+
+
+  game.stock+=amount;
+
+  game.restocks++;
+
+
+  addXP(12);
+
+
+  addLog(
+    "📦 Restock +"+
+    amount+
+    " barang"
+  );
+
+
+  toast(
+    "📦 Stok +"+
+    amount
+  );
+
+
+  checkMissions();
+
+  saveGame();
+
+  render();
+
+}
+
+
+/* START SHIFT */
+
+function startShift(){
+
+  if(game.shiftActive){
+
+    toast("⏰ Shift sedang berjalan!");
+
+    return;
+
+  }
+
+
+  if(game.energy<20){
+
+    game.energy=100;
+
+  }
+
+
+  game.shiftActive=true;
+
+  game.workMinutes=0;
+
+
+  addLog("⏰ Shift kerja dimulai");
+
+  toast("⏰ Shift dimulai!");
+
+  saveGame();
+
+  render();
+
+
+  window.shiftTimer=
+    setInterval(
+      ()=>{
+
+        if(!game.shiftActive){
+
+          clearInterval(
+            window.shiftTimer
+          );
+
+          return;
+
+        }
+
+
+        game.workMinutes++;
+
+
+        if(
+          game.workMinutes%5===0
+        ){
+
+          game.energy=
+            Math.max(
+              0,
+              game.energy-5
+            );
+
+        }
+
+
+        if(
+          game.workMinutes>=60
+        ){
+
+          endShift();
+
+        }
+
+
+        saveGame();
+
+        render();
+
+      },
+      1000
+    );
+
+}
+
+
+/* END SHIFT */
+
+function endShift(){
+
+  game.shiftActive=false;
+
+
+  if(window.shiftTimer){
+
+    clearInterval(
+      window.shiftTimer
+    );
+
+  }
+
+
+  const salary=
+    5000+
+    game.level*1000;
+
+
+  game.money+=salary;
+
+
+  addXP(30);
+
+
+  addLog(
+    "🏁 Shift selesai! Gaji "+
+    rupiah(salary)
+  );
+
+
+  toast(
+    "🏁 Shift selesai! Gaji "+
+    rupiah(salary)
+  );
+
+
+  saveGame();
+
+  render();
+
+}
+
+
+/* UPGRADE */
+
+function upgradeShop(){
+
+  const cost=
+    game.shopLevel*
+    50000;
+
+
+  if(game.money<cost){
+
+    toast(
+      "💸 Butuh "+
+      rupiah(cost)
+    );
+
+    return;
+
+  }
+
+
+  game.money-=cost;
+
+  game.shopLevel++;
+
+
+  addXP(50);
+
+
+  addLog(
+    "🏪 Toko naik ke level "+
+    game.shopLevel
+  );
+
+
+  toast(
+    "🏪 Upgrade berhasil!"
+  );
+
+
+  saveGame();
+
+  render();
+
+}
+
+
+/* MISSIONS */
+
+function checkMissions(){
+
+  if(
+    game.customers>=10 &&
+    !localStorage.getItem(
+      "mission_v2_customer"
+    )
+  ){
+
+    game.money+=10000;
+
+
+    localStorage.setItem(
+      "mission_v2_customer",
+      "1"
+    );
+
+
+    addLog(
+      "🎯 Misi pelanggan selesai +Rp10.000"
+    );
+
+
+    toast(
+      "🎯 Misi selesai! +Rp10.000"
+    );
+
+  }
+
+
+  if(
+    game.restocks>=5 &&
+    !localStorage.getItem(
+      "mission_v2_restock"
+    )
+  ){
+
+    game.money+=15000;
+
+
+    localStorage.setItem(
+      "mission_v2_restock",
+      "1"
+    );
+
+
+    addLog(
+      "🎯 Misi restock selesai +Rp15.000"
+    );
+
+
+    toast(
+      "🎯 Misi selesai! +Rp15.000"
+    );
+
+  }
+
+
+  if(
+    game.earned>=100000 &&
+    !localStorage.getItem(
+      "mission_v2_money"
+    )
+  ){
+
+    game.money+=20000;
+
+
+    localStorage.setItem(
+      "mission_v2_money",
+      "1"
+    );
+
+
+    addLog(
+      "🎯 Misi omzet selesai +Rp20.000"
+    );
+
+
+    toast(
+      "🎯 Misi omzet selesai! +Rp20.000"
+    );
+
+  }
+
+}
+
+
+/* BACKUP */
+
+function backupGame(){
+
+  const backup={
+
+    ...game,
+
+    backupDate:
+      new Date().toISOString()
+
   };
 
-  reader.readAsText(file);
-  event.target.value="";
+
+  const blob=
+    new Blob(
+      [
+        JSON.stringify(
+          backup,
+          null,
+          2
+        )
+      ],
+      {
+        type:"application/json"
+      }
+    );
+
+
+  const url=
+    URL.createObjectURL(blob);
+
+
+  const a=
+    document.createElement("a");
+
+
+  a.href=url;
+
+  a.download=
+    "backup-minimarket-v2.json";
+
+
+  a.click();
+
+
+  URL.revokeObjectURL(url);
+
+
+  toast(
+    "💾 Backup berhasil!"
+  );
+
 }
+
+
+/* RESTORE */
+
+function restoreGame(event){
+
+  const file=
+    event.target.files[0];
+
+
+  if(!file)return;
+
+
+  const reader=
+    new FileReader();
+
+
+  reader.onload=
+    function(e){
+
+      try{
+
+        const data=
+          JSON.parse(
+            e.target.result
+          );
+
+
+        if(
+          typeof data.money!=="number"
+        ){
+
+          throw new Error();
+
+        }
+
+
+        game=Object.assign(
+          game,
+          data
+        );
+
+
+        saveGame();
+
+        render();
+
+
+        toast(
+          "♻️ Restore berhasil!"
+        );
+
+
+      }catch(error){
+
+        toast(
+          "❌ File backup tidak valid."
+        );
+
+      }
+
+    };
+
+
+  reader.readAsText(file);
+
+  event.target.value="";
+
+}
+
+
+/* RESET */
 
 function resetGame(){
 
-  const yakin=confirm(
-    "Yakin mau menghapus semua progress game?"
+  const yes=
+    confirm(
+      "Yakin mau menghapus semua progress?"
+    );
+
+
+  if(!yes)return;
+
+
+  localStorage.removeItem(
+    SAVE_KEY
   );
 
-  if(!yakin)return;
 
-  localStorage.removeItem(KEY);
-  localStorage.removeItem("mission_customer_reward");
-  localStorage.removeItem("mission_restock_reward");
+  localStorage.removeItem(
+    "mission_v2_customer"
+  );
 
-  game={
-    money:50000,
-    level:1,
-    xp:0,
-    stock:20,
-    customers:0,
-    restocks:0,
-    earned:0,
-    shopLevel:1,
-    logs:[]
-  };
 
-  save();
-  render();
+  localStorage.removeItem(
+    "mission_v2_restock"
+  );
 
-  toast("🔄 Game direset.");
+
+  localStorage.removeItem(
+    "mission_v2_money"
+  );
+
+
+  location.reload();
+
 }
 
-load();
+
+/* RENDER */
+
+function render(){
+
+  document.getElementById(
+    "money"
+  ).textContent=
+    rupiah(game.money);
+
+
+  document.getElementById(
+    "level"
+  ).textContent=
+    game.level;
+
+
+  document.getElementById(
+    "energy"
+  ).textContent=
+    game.energy;
+
+
+  document.getElementById(
+    "customers"
+  ).textContent=
+    game.customers;
+
+
+  document.getElementById(
+    "stock"
+  ).textContent=
+    game.stock;
+
+
+  document.getElementById(
+    "xp"
+  ).textContent=
+    game.xp;
+
+
+  document.getElementById(
+    "xpNeed"
+  ).textContent=
+    getXPNeed();
+
+
+  const xpPercent=
+    Math.min(
+      100,
+      (
+        game.xp/
+        getXPNeed()
+      )*100
+    );
+
+
+  document.getElementById(
+    "xpBar"
+  ).style.width=
+    xpPercent+"%";
+
+
+  document.getElementById(
+    "missionCustomers"
+  ).textContent=
+    Math.min(
+      10,
+      game.customers
+    )+"/10";
+
+
+  document.getElementById(
+    "missionRestock"
+  ).textContent=
+    Math.min(
+      5,
+      game.restocks
+    )+"/5";
+
+
+  document.getElementById(
+    "missionEarn"
+  ).textContent=
+    rupiah(
+      Math.min(
+        100000,
+        game.earned
+      )
+    );
+
+
+  if(game.customers>=10){
+
+    document.getElementById(
+      "mission1"
+    ).classList.add("done");
+
+  }
+
+
+  if(game.restocks>=5){
+
+    document.getElementById(
+      "mission2"
+    ).classList.add("done");
+
+  }
+
+
+  if(game.earned>=100000){
+
+    document.getElementById(
+      "mission3"
+    ).classList.add("done");
+
+  }
+
+
+  document.getElementById(
+    "shiftStatus"
+  ).textContent=
+    game.shiftActive
+      ?"🟢 Sedang bekerja"
+      :"🔴 Belum mulai";
+
+
+  const hour=
+    Math.floor(
+      game.workMinutes/60
+    );
+
+
+  const minute=
+    game.workMinutes%60;
+
+
+  document.getElementById(
+    "workTime"
+  ).textContent=
+    "08:"+
+    String(
+      minute
+    ).padStart(2,"0");
+
+
+  document.getElementById(
+    "shiftBar"
+  ).style.width=
+    Math.min(
+      100,
+      (game.workMinutes/60)*100
+    )+"%";
+
+
+  updatePlayer();
+
+
+  const log=
+    document.getElementById(
+      "log"
+    );
+
+
+  if(game.logs.length===0){
+
+    log.innerHTML=
+      "<div class='log-item'>🎮 Belum ada aktivitas.</div>";
+
+  }else{
+
+    log.innerHTML=
+      game.logs.map(
+        x=>`
+        <div class="log-item">
+          <b>${x.time}</b>
+          — ${x.text}
+        </div>
+        `
+      ).join("");
+
+  }
+
+}
+
+
+/* AUTO CUSTOMER */
+
+setInterval(
+  ()=>{
+
+    if(
+      game.shiftActive
+    ){
+
+      spawnCustomer();
+
+    }
+
+  },
+  7000
+);
+
+
+/* INIT */
+
+loadGame();
+
 render();
 
 </script>
