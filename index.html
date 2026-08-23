@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+<meta name="theme-color" content="#ff7a00">
+<title>Minimarket Simulator</title>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:Arial,sans-serif;
+  background:linear-gradient(135deg,#ff8a00,#ffb300);
+  min-height:100vh;color:#222;
+  padding-bottom:30px;
+}
+.app{max-width:600px;margin:auto;padding:12px}
+.header{
+  background:#fff;border-radius:20px;padding:18px;
+  box-shadow:0 8px 25px #0002;margin-bottom:12px
+}
+.logo{font-size:28px;font-weight:900}
+.logo span{color:#ff7a00}
+.sub{color:#777;margin-top:4px}
+.stats{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:8px;margin-top:15px
+}
+.stat{
+  background:#f7f7f7;border-radius:14px;padding:12px;
+  text-align:center
+}
+.stat b{display:block;font-size:18px;margin-top:4px}
+.card{
+  background:#fff;border-radius:20px;padding:16px;
+  margin-bottom:12px;box-shadow:0 8px 25px #0002
+}
+.card h2{font-size:19px;margin-bottom:12px}
+.progress{
+  height:13px;background:#eee;border-radius:20px;overflow:hidden
+}
+.progress div{
+  height:100%;width:0;background:linear-gradient(90deg,#ff6a00,#ffc107);
+  transition:.4s
+}
+.grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:10px
+}
+button{
+  border:0;border-radius:15px;padding:15px 10px;
+  font-size:15px;font-weight:700;cursor:pointer;
+  background:#ff7a00;color:white;
+  box-shadow:0 5px 12px #0002;
+  transition:.15s
+}
+button:active{transform:scale(.96)}
+button.secondary{background:#eee;color:#333}
+button.green{background:#16a34a}
+button.red{background:#dc2626}
+button.blue{background:#2563eb}
+button:disabled{opacity:.45;cursor:not-allowed}
+.product{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:12px;background:#f7f7f7;border-radius:14px;margin-bottom:8px
+}
+.product small{display:block;color:#777;margin-top:3px}
+.product button{padding:9px 12px;border-radius:11px}
+.mission{
+  display:flex;justify-content:space-between;gap:10px;
+  padding:12px;background:#fff7ed;border-radius:13px;margin-bottom:8px
+}
+.done{background:#dcfce7}
+.badge{
+  display:inline-block;background:#ff7a00;color:white;
+  padding:5px 10px;border-radius:20px;font-size:12px
+}
+.log{
+  max-height:180px;overflow:auto;
+  font-size:14px
+}
+.log div{
+  padding:9px;border-bottom:1px solid #eee
+}
+.shop{
+  text-align:center;background:linear-gradient(135deg,#fff,#fff7ed);
+  border-radius:18px;padding:20px;margin-bottom:12px
+}
+.shop-icon{font-size:65px}
+.shop-name{font-size:25px;font-weight:900;margin:8px}
+.toast{
+  position:fixed;left:50%;bottom:20px;
+  transform:translate(-50%,120px);
+  background:#222;color:#fff;padding:13px 20px;
+  border-radius:30px;z-index:99;
+  transition:.3s;box-shadow:0 8px 25px #0004;
+  text-align:center;max-width:90%
+}
+.toast.show{transform:translate(-50%,0)}
+footer{text-align:center;color:#fff8;font-size:12px;padding:8px}
+@media(max-width:380px){
+  .stats{grid-template-columns:1fr 1fr}
+  button{font-size:14px}
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <div class="header">
+    <div class="logo">🏪 <span>MINIMARKET</span> SIMULATOR</div>
+    <div class="sub">Kelola toko kecilmu dan jadilah juragan!</div>
+
+    <div class="stats">
+      <div class="stat">💰 Uang<b id="money">Rp 0</b></div>
+      <div class="stat">⭐ Level<b id="level">1</b></div>
+      <div class="stat">📦 Stok<b id="stock">0</b></div>
+    </div>
+  </div>
+
+  <div class="shop">
+    <div class="shop-icon" id="shopIcon">🏪</div>
+    <div class="shop-name" id="shopName">Warung Kecil</div>
+    <span class="badge" id="upgradeText">Upgrade: Rp 50.000</span>
+  </div>
+
+  <div class="card">
+    <h2>⭐ Pengalaman</h2>
+    <div class="progress"><div id="xpBar"></div></div>
+    <p style="margin-top:7px;color:#777">
+      XP: <b id="xp">0</b> / <b id="xpNeed">100</b>
+    </p>
+  </div>
+
+  <div class="card">
+    <h2>🎮 Aktivitas Toko</h2>
+
+    <div class="grid">
+      <button onclick="serveCustomer()">🛒 Layani Pelanggan</button>
+      <button class="green" onclick="restock()">📦 Restock Barang</button>
+      <button class="blue" onclick="upgradeShop()">🏪 Upgrade Toko</button>
+      <button class="secondary" onclick="showProducts()">📋 Lihat Produk</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>🎯 Misi Hari Ini</h2>
+
+    <div class="mission" id="m1">
+      <span>Layani 10 pelanggan</span>
+      <b id="missionCustomer">0/10</b>
+    </div>
+
+    <div class="mission" id="m2">
+      <span>Restock 5 kali</span>
+      <b id="missionRestock">0/5</b>
+    </div>
+
+    <div class="mission" id="m3">
+      <span>Dapatkan Rp100.000</span>
+      <b id="missionMoney">Rp 0</b>
+    </div>
+  </div>
+
+  <div class="card" id="productsCard" style="display:none">
+    <h2>📦 Produk Toko</h2>
+    <div id="products"></div>
+  </div>
+
+  <div class="card">
+    <h2>📜 Aktivitas Terakhir</h2>
+    <div class="log" id="log"></div>
+  </div>
+
+  <div class="card">
+    <h2>⚙️ Data Game</h2>
+    <div class="grid">
+      <button class="secondary" onclick="backupGame()">💾 Backup</button>
+      <button class="secondary" onclick="document.getElementById('restore').click()">♻️ Restore</button>
+      <button class="red" onclick="resetGame()">🗑️ Reset Game</button>
+    </div>
+    <input id="restore" type="file" accept=".json" style="display:none" onchange="restoreGame(event)">
+  </div>
+
+  <footer>
+    Minimarket Simulator • Offline Game
+  </footer>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const KEY="minimarket_simulator_v1";
+
+const products=[
+  {name:"Indomie",price:3000,emoji:"🍜"},
+  {name:"Aqua",price:4000,emoji:"💧"},
+  {name:"Teh Botol",price:5000,emoji:"🧃"},
+  {name:"Roti",price:7000,emoji:"🍞"},
+  {name:"Snack",price:6000,emoji:"🍪"},
+  {name:"Susu",price:9000,emoji:"🥛"},
+  {name:"Kopi",price:8000,emoji:"☕"},
+  {name:"Sabun",price:5000,emoji:"🧼"}
+];
+
+let game={
+  money:50000,
+  level:1,
+  xp:0,
+  stock:20,
+  customers:0,
+  restocks:0,
+  earned:0,
+  shopLevel:1,
+  logs:[]
+};
+
+function save(){
+  localStorage.setItem(KEY,JSON.stringify(game));
+}
+
+function load(){
+  const data=localStorage.getItem(KEY);
+  if(data){
+    try{
+      game=Object.assign(game,JSON.parse(data));
+    }catch(e){}
+  }
+}
+
+function rupiah(n){
+  return "Rp "+Number(n).toLocaleString("id-ID");
+}
+
+function toast(text){
+  const el=document.getElementById("toast");
+  el.textContent=text;
+  el.classList.add("show");
+  clearTimeout(window.toastTimer);
+  window.toastTimer=setTimeout(()=>{
+    el.classList.remove("show");
+  },2200);
+}
+
+function addLog(text){
+  game.logs.unshift({
+    text:text,
+    time:new Date().toLocaleTimeString("id-ID",{
+      hour:"2-digit",
+      minute:"2-digit"
+    })
+  });
+
+  if(game.logs.length>30) game.logs.length=30;
+}
+
+function xpNeed(){
+  return 100+(game.level-1)*50;
+}
+
+function addXP(amount){
+  game.xp+=amount;
+
+  while(game.xp>=xpNeed()){
+    game.xp-=xpNeed();
+    game.level++;
+
+    const bonus=game.level*500;
+    game.money+=bonus;
+
+    addLog("🎉 Naik ke level "+game.level+"! Bonus "+rupiah(bonus));
+    toast("🎉 LEVEL UP! Kamu sekarang level "+game.level);
+  }
+}
+
+function serveCustomer(){
+
+  if(game.stock<=0){
+    toast("📦 Stok habis! Restock dulu.");
+    return;
+  }
+
+  const quantity=Math.floor(Math.random()*3)+1;
+
+  if(game.stock<quantity){
+    toast("📦 Stok tidak cukup!");
+    return;
+  }
+
+  let earned=0;
+
+  for(let i=0;i<quantity;i++){
+    const p=products[Math.floor(Math.random()*products.length)];
+    earned+=p.price;
+  }
+
+  earned+=game.shopLevel*500;
+
+  game.stock-=quantity;
+  game.money+=earned;
+  game.earned+=earned;
+  game.customers++;
+
+  addXP(10+game.shopLevel*2);
+
+  addLog("🛒 Pelanggan dilayani: +"+rupiah(earned));
+
+  if(game.customers>=10 && !localStorage.getItem("mission_customer_reward")){
+    game.money+=10000;
+    localStorage.setItem("mission_customer_reward","1");
+    addLog("🎯 Misi pelanggan selesai: bonus "+rupiah(10000));
+    toast("🎯 Misi selesai! Bonus Rp10.000");
+  }else{
+    toast("💰 Penjualan +"+rupiah(earned));
+  }
+
+  save();
+  render();
+}
+
+function restock(){
+
+  const cost=15000;
+
+  if(game.money<cost){
+    toast("💸 Uang tidak cukup. Butuh "+rupiah(cost));
+    return;
+  }
+
+  game.money-=cost;
+
+  const amount=15+game.shopLevel*5;
+  game.stock+=amount;
+  game.restocks++;
+
+  addXP(15);
+
+  addLog("📦 Restock +"+amount+" barang (-"+rupiah(cost)+")");
+
+  if(game.restocks>=5 && !localStorage.getItem("mission_restock_reward")){
+    game.money+=15000;
+    localStorage.setItem("mission_restock_reward","1");
+    addLog("🎯 Misi restock selesai: bonus Rp15.000");
+    toast("🎯 Misi selesai! Bonus Rp15.000");
+  }else{
+    toast("📦 Stok bertambah "+amount);
+  }
+
+  save();
+  render();
+}
+
+function upgradeCost(){
+  return game.shopLevel*50000;
+}
+
+function upgradeShop(){
+
+  const cost=upgradeCost();
+
+  if(game.money<cost){
+    toast("💸 Butuh "+rupiah(cost)+" untuk upgrade.");
+    return;
+  }
+
+  game.money-=cost;
+  game.shopLevel++;
+
+  addXP(50);
+
+  addLog("🏪 Toko di-upgrade ke level "+game.shopLevel);
+
+  toast("🏪 Upgrade berhasil!");
+
+  save();
+  render();
+}
+
+function showProducts(){
+  const card=document.getElementById("productsCard");
+
+  if(card.style.display==="none"){
+    card.style.display="block";
+    renderProducts();
+    card.scrollIntoView({behavior:"smooth"});
+  }else{
+    card.style.display="none";
+  }
+}
+
+function renderProducts(){
+
+  const el=document.getElementById("products");
+
+  el.innerHTML=products.map(p=>`
+    <div class="product">
+      <div>
+        <b>${p.emoji} ${p.name}</b>
+        <small>${rupiah(p.price)} / item</small>
+      </div>
+      <span>📦</span>
+    </div>
+  `).join("");
+}
+
+function render(){
+
+  document.getElementById("money").textContent=rupiah(game.money);
+  document.getElementById("level").textContent=game.level;
+  document.getElementById("stock").textContent=game.stock;
+
+  document.getElementById("xp").textContent=game.xp;
+  document.getElementById("xpNeed").textContent=xpNeed();
+
+  const percent=Math.min(100,(game.xp/xpNeed())*100);
+  document.getElementById("xpBar").style.width=percent+"%";
+
+  document.getElementById("missionCustomer").textContent=
+    Math.min(game.customers,10)+"/10";
+
+  document.getElementById("missionRestock").textContent=
+    Math.min(game.restocks,5)+"/5";
+
+  document.getElementById("missionMoney").textContent=
+    rupiah(Math.min(game.earned,100000));
+
+  if(game.customers>=10){
+    document.getElementById("m1").classList.add("done");
+  }
+
+  if(game.restocks>=5){
+    document.getElementById("m2").classList.add("done");
+  }
+
+  if(game.earned>=100000){
+    document.getElementById("m3").classList.add("done");
+  }
+
+  const names=[
+    "Warung Kecil",
+    "Warung Modern",
+    "Toko Kelontong",
+    "Minimarket",
+    "Supermarket Mini",
+    "Supermarket",
+    "Hypermarket"
+  ];
+
+  const icons=[
+    "🏚️",
+    "🏠",
+    "🏪",
+    "🏬",
+    "🏢",
+    "🏙️",
+    "🏙️"
+  ];
+
+  const index=Math.min(game.shopLevel-1,names.length-1);
+
+  document.getElementById("shopName").textContent=
+    names[index];
+
+  document.getElementById("shopIcon").textContent=
+    icons[index];
+
+  document.getElementById("upgradeText").textContent=
+    "Upgrade: "+rupiah(upgradeCost());
+
+  const log=document.getElementById("log");
+
+  if(game.logs.length===0){
+    log.innerHTML="<div>Belum ada aktivitas.</div>";
+  }else{
+    log.innerHTML=game.logs.map(x=>`
+      <div>
+        <b>${x.time}</b> — ${x.text}
+      </div>
+    `).join("");
+  }
+
+  renderProducts();
+}
+
+function backupGame(){
+
+  const data={
+    ...game,
+    backupDate:new Date().toISOString()
+  };
+
+  const blob=new Blob(
+    [JSON.stringify(data,null,2)],
+    {type:"application/json"}
+  );
+
+  const url=URL.createObjectURL(blob);
+
+  const a=document.createElement("a");
+  a.href=url;
+  a.download="backup-minimarket.json";
+  a.click();
+
+  URL.revokeObjectURL(url);
+
+  toast("💾 Backup berhasil dibuat!");
+}
+
+function restoreGame(event){
+
+  const file=event.target.files[0];
+
+  if(!file)return;
+
+  const reader=new FileReader();
+
+  reader.onload=function(e){
+
+    try{
+
+      const data=JSON.parse(e.target.result);
+
+      if(typeof data.money!=="number"){
+        throw new Error();
+      }
+
+      game=Object.assign(game,data);
+
+      save();
+      render();
+
+      toast("♻️ Data berhasil dipulihkan!");
+
+    }catch(err){
+
+      toast("❌ File backup tidak valid.");
+
+    }
+
+  };
+
+  reader.readAsText(file);
+  event.target.value="";
+}
+
+function resetGame(){
+
+  const yakin=confirm(
+    "Yakin mau menghapus semua progress game?"
+  );
+
+  if(!yakin)return;
+
+  localStorage.removeItem(KEY);
+  localStorage.removeItem("mission_customer_reward");
+  localStorage.removeItem("mission_restock_reward");
+
+  game={
+    money:50000,
+    level:1,
+    xp:0,
+    stock:20,
+    customers:0,
+    restocks:0,
+    earned:0,
+    shopLevel:1,
+    logs:[]
+  };
+
+  save();
+  render();
+
+  toast("🔄 Game direset.");
+}
+
+load();
+render();
+
+</script>
+
+</body>
+</html>
